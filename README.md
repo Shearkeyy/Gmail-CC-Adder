@@ -9,4 +9,8 @@ What program does it pretty simple, the program will pop browsers and login and 
 
 This is an updated version of what I made, the updates where made by molie using chatgpt. Hence this version also supports a lot of languages thanks to molie.
 
+if you're not on windows, change the browser executablePath in index.js line 203.
+
+Leave a star if you want me to post more cool stuff on github!
+
 visit https://shearkeykingdom.com for cool more products and if you want me to work or make things for you contact me at @Shearkeyz telegram.
