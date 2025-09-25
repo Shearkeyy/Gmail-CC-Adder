@@ -300,7 +300,7 @@ async function main(emailData) {
     for (const sel of selectors) {
       try {
         const btn = page.locator(sel);
-        await btn.waitFor({ state: 'visible', timeout: 8000 });
+        await btn.waitFor({ state: 'visible', timeout: 16000 });
         await btn.click();
         clicked = true;
         break;
@@ -524,3 +524,4 @@ run().catch(err => {
   log.error(`Batch run failed: ${err.message}`);
   process.exit(1);
 });
+
