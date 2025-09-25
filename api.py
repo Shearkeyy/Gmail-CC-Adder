@@ -5,7 +5,7 @@ from itertools import cycle
 
 app = Flask(__name__)
 
-proxies = [line.rstrip("\n") for line in open("data/proxies.txt", "r")]
+proxies = [line.rstrip("\n") for line in open("Input/proxies.txt", "r")]
 proxy_pool = cycle(proxies)
 clients = []
 j = 0
@@ -75,3 +75,4 @@ def send_request(method, client, url, payload, headers):
 if __name__ == "__main__":
     clients.append(tls_client.Session(client_identifier="chrome_120", random_tls_extension_order=True))
     app.run(host='127.0.0.1', port=3005)
+
