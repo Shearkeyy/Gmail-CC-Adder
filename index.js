@@ -8,13 +8,10 @@ const SELECT_BILLING_COUNTRY = true;
 
 
 let cards = [];
-let currentCard = null;
 let runningThreads = 0;
 let MAX_THREADS = 5;
 
 const sleep = (ms) => new Promise(res => setTimeout(res, ms));
-
-
 
 const COLORS = {
   reset: "\x1b[0m",
@@ -153,20 +150,7 @@ async function tryClickCancelOrSkip(page) {
 }
 
 
-
-async function checkIfFlagged(page, email) {
-  try {
-    const captchaSection = page.locator('section.Em2Ord');
-    if (await captchaSection.isVisible({ timeout: 5000 })) {
-      return true;
-    }
-  } catch (e) {
-  }
-  return false;
-}
-
-
-async function selectBillingCountry(cardFrame, page, countryCode = "SA") {
+async function selectBillingCountry(cardFrame, page, countryCode = "PK") {
   try {
     const billingSection = cardFrame.locator('.b3-credit-card-billing-address-collapsing-form');
     await billingSection.waitFor({ state: 'visible', timeout: 8000 });
@@ -201,13 +185,21 @@ async function selectBillingCountry(cardFrame, page, countryCode = "SA") {
 async function main(emailData) {
   const threadId = Math.random().toString(36).substr(2, 9);
   const browser = await chromium.launch({ headless: false, executablePath: "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe", args: ["--window-position=-2000,0", "--window-size=800,600" ], });
-  const context = await browser.newContext();
+  const context = await browser.newContext({
+    locale: "en-US",
+  });
   const page = await context.newPage();
   const last4s = cards.map(c => c.split(":")[0].slice(-4));
   let processed = null;
+  let email, password, subemail;
 
   try {
-    const [email, password] = emailData.split(":");
+    const data = emailData.split(":");
+    if (data.length === 2) {
+      [email, password] = data
+    } else {
+      [email, password, subemail] = data
+    }
 
     await page.route("**/*", async (route, request) => {
       const url = request.url();
@@ -255,11 +247,27 @@ async function main(emailData) {
       await page.locator("#passwordNext button").click();
       await page.waitForLoadState("load");
     } catch (err) {
-    await browser.close()
-    log.error(`Failed to login to email account`, { email: email, error: "Account flagged/Password is wrong" });
-    return "FLAGGED";
+      await browser.close()
+      log.error(`Failed to login to email account`, { email: email, error: "Account flagged/Password is wrong" });
+      return "FLAGGED";
     }
 
+    await page.waitForTimeout(3000);
+    const confirm_email = page.locator(".VV3oRb.YZVTmd.SmR8", {hasText: "Confirm your recovery email"});
+
+    if (await confirm_email.count({ timeout: 5000 }) === 1) {
+      await confirm_email.click();
+      await page.locator("input[type='email']").fill(subemail);
+      const next = page.locator(".VfPpkd-vQzf8d", {hasText: "Next"})
+      while (await next.count() === 0) {
+        await page.waitForTimeout(500);
+        if (await next.count() === 1) {
+          break;
+        }
+      }
+      await next.click();
+      await page.waitForLoadState("load");
+    }
 
     log.success(`Successfully logged into gmail account`, { email: email });
 
@@ -469,6 +477,11 @@ export async function processItem(item) {
 
   try {
     const result = await main(item);
+    const data = item.split(":");
+    if (data.length === 3) {
+      [email, password, subemail] = data;
+      item = `${email}:${password}`
+    }
     if (result === "DONE") {
       await appendLine("Output/added_vcc.txt", item);
     } else if (result === "ERRORADD") {
@@ -524,4 +537,3 @@ run().catch(err => {
   log.error(`Batch run failed: ${err.message}`);
   process.exit(1);
 });
-
