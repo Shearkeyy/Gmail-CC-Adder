@@ -1,8 +1,8 @@
-# 📇 GMAIL Card Adder
+# GMAIL Card Adder
 
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
 ![Node.js](https://img.shields.io/badge/node-%3E=14-green)
-![Status](https://img.shields.io/badge/status-experimental-yellow)
+![Status](https://img.shields.io/badge/status-active-success)
 
 A lightweight automation tool that opens browser instances, logs into Gmail accounts, and adds payment cards.  
 The final request that authorizes the card is intercepted and forwarded to a small proxy-aware Python API (`api.py`) which sends that single request through a rotating proxy — avoiding the chances of being rate-limited.
