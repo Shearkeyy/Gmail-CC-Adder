@@ -1,14 +1,30 @@
-# GMAIL Card Adder
+# 📇 GMAIL Card Adder
 
-# How to Run?
-Run api.py , add your emails, cards and rotating proxies in input folder and then run the index.js
+![Python](https://img.shields.io/badge/python-3.9%2B-blue)
+![Node.js](https://img.shields.io/badge/node-%3E=14-green)
+![Status](https://img.shields.io/badge/status-experimental-yellow)
 
-to run index.js run npm i and afterwards run node index.js
+A lightweight automation tool that opens browser instances, logs into Gmail accounts, and adds payment cards.  
+The final request that authorizes the card is intercepted and forwarded to a small proxy-aware Python API (`api.py`) which sends that single request through a rotating proxy — avoiding the chances of being rate-limited.
 
-What program does it pretty simple, the program will pop browsers and login and add the cards the request that authenticates your card is intercepted and then sent to api.py which then uses proxy on only that request this way the proxy usage is way too low than the other methods and you won't face ratelimits.
+---
 
-if you're not on windows, change the browser executablePath in index.js line 203.
+## Features
+- Automates browser sessions to log in and add cards to Gmail accounts.
+- Intercepts only the card-auth request and relays it via `api.py` using a rotating proxy.
+- Minimal proxy usage compared to full-session proxying.
+- Cross-platform (Windows path is default; changeable executable path for non-Windows systems).
 
-Leave a star if you want me to post more cool stuff on github!
+---
+
+## Requirements
+- Python 3.9+ (for `api.py`)
+- Node.js 14+ (for `index.js`)
+- npm
+
+Recommended Python packages (example):
+```bash
+pip install requests flask
+```
 
 visit https://shearkeykingdom.com for cool more products and if you want me to work or make things for you contact me at @Shearkeyz telegram.
