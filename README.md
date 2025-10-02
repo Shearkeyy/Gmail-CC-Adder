@@ -1,6 +1,6 @@
-GMAIL Card Adder
+# GMAIL Card Adder
 
-How to Run?
+# How to Run?
 Run api.py , add your emails, cards and rotating proxies in input folder and then run the index.js
 
 to run index.js run npm i and afterwards run node index.js
