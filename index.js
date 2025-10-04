@@ -235,7 +235,7 @@ async function main(emailData) {
       }
     });
 
-    await page.goto("https://play.google.com/store/paymentmethods?pli=1", { waitUntil: "load" });
+    await page.goto("https://play.google.com/store/paymentmethods?hl=en&pli=1", { waitUntil: "load" });
 
     await page.locator("input[type='email']").fill(email);
     await page.locator("#identifierNext button").click();
@@ -537,3 +537,4 @@ run().catch(err => {
   log.error(`Batch run failed: ${err.message}`);
   process.exit(1);
 });
+
